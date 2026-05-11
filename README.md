@@ -1,6 +1,6 @@
 # Mall Customer Segmentation Analysis
 
-![Customer Segmentation Overview](./Images/Grid(3).png)
+![Customer Segmentation Overview](./Images/Grid.png)
 
 ## Project Overview
 This project explores customer segmentation using unsupervised machine learning techniques to identify patterns in mall customer behavior.
