@@ -50,9 +50,9 @@ Mall-Customer-Segmentation/
 ├── Data/
 │
 ├── Images/
-│   ├── Grid(3).png
-│   ├── Hierarchical(1).png
-│   └── K-Means(1).png
+│   ├── Grid.png
+│   ├── Hierarchical.png
+│   └── K-Means.png
 │
 ├── Notebooks/
 │   └── mall_customer_segmentation.ipynb
@@ -73,7 +73,7 @@ The project explored relationships between:
 
 The pairplot visualization below highlights customer distribution patterns and variable relationships used for segmentation analysis.
 
-![Customer Pairplot](./Images/Grid(3).png)
+![Customer Pairplot](./Images/Grid.png)
 
 ---
 
@@ -92,7 +92,7 @@ The analysis compared multiple cluster values to determine optimal customer segm
 
 The K-Means clustering evaluation compared cluster counts across multiple values of `k` using the Calinski-Harabasz score.
 
-![K-Means Evaluation](./Images/K-Means(1).png)
+![K-Means Evaluation](./Images/K-Means.png)
 
 ---
 
@@ -100,7 +100,7 @@ The K-Means clustering evaluation compared cluster counts across multiple values
 
 Hierarchical clustering analysis was also performed to compare segmentation quality across varying cluster counts.
 
-![Hierarchical Clustering](./Images/Hierarchical(1).png)
+![Hierarchical Clustering](./Images/Hierarchical.png)
 
 ---
 
