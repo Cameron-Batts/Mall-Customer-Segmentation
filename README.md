@@ -1,6 +1,6 @@
 # Mall Customer Segmentation Analysis
 
-![Customer Segmentation Overview](./Images/Grid(2).png)
+![Customer Segmentation Overview](./Images/Grid(3).png)
 
 ## Project Overview
 This project explores customer segmentation using unsupervised machine learning techniques to identify patterns in mall customer behavior.
@@ -50,9 +50,9 @@ Mall-Customer-Segmentation/
 ├── Data/
 │
 ├── Images/
-│   ├── Grid(2).png
-│   ├── Hierarchical.png
-│   └── K-Means.png
+│   ├── Grid(3).png
+│   ├── Hierarchical(1).png
+│   └── K-Means(1).png
 │
 ├── Notebooks/
 │   └── mall_customer_segmentation.ipynb
@@ -73,7 +73,7 @@ The project explored relationships between:
 
 The pairplot visualization below highlights customer distribution patterns and variable relationships used for segmentation analysis.
 
-![Customer Pairplot](./Images/Grid(2).png)
+![Customer Pairplot](./Images/Grid(3).png)
 
 ---
 
@@ -92,7 +92,7 @@ The analysis compared multiple cluster values to determine optimal customer segm
 
 The K-Means clustering evaluation compared cluster counts across multiple values of `k` using the Calinski-Harabasz score.
 
-![K-Means Evaluation](./Images/K-Means.png)
+![K-Means Evaluation](./Images/K-Means(1).png)
 
 ---
 
@@ -100,7 +100,7 @@ The K-Means clustering evaluation compared cluster counts across multiple values
 
 Hierarchical clustering analysis was also performed to compare segmentation quality across varying cluster counts.
 
-![Hierarchical Clustering](./Images/Hierarchical.png)
+![Hierarchical Clustering](./Images/Hierarchical(1).png)
 
 ---
 
