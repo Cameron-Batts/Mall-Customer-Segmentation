@@ -1,168 +1,32 @@
-# Mall Customer Segmentation Analysis
+# Mall Customer Segmentation and PCA
+**Cameron Batts**
 
-![Customer Segmentation Overview](./Images/Grid.png)
+## Problem
+Compare cluster-count heuristics and examine how much information PCA retains in three customer attributes.
 
-## Project Overview
-This project explores customer segmentation using unsupervised machine learning techniques to identify patterns in mall customer behavior.
+## Approach
+Use 200 customers with age, annual income and spending score. Evaluate k=2–14 using K-Means and Ward agglomerative clustering with Calinski–Harabasz, negated Davies–Bouldin and silhouette scores. Clustering uses original feature scales; PCA uses standardized features.
 
-The analysis applies clustering methods to group customers based on:
-- age
-- annual income
-- spending behavior
+## Results
+The original six saved clustering searches all selected six clusters. Standardized PCA retained 44.27% of variance with one component and 77.57% with two. Agreement between internal metrics supports further exploration; it does not prove actionable customer segments.
 
-The project includes:
-- exploratory data analysis (EDA)
-- feature relationship analysis
-- K-Means clustering
-- hierarchical clustering evaluation
-- cluster performance analysis
-- customer segmentation visualization
+## Limitations
+The original plotting/tuning helper was absent. A replacement is now bundled with explicit random_state=42 and n_init=10; results may differ from the historical outputs. Original clustering outputs are retained and labeled, and the replacement helper is checked separately. Clustering is sensitive to feature scales, seeds and sample composition. No stability analysis, customer-level segment profiles or campaign validation was performed.
 
----
+## Data
+Data/mall_customers.csv contains 200 records. CustomerID and Gender are excluded from modeling. The original repository did not document a dataset source or license; provenance remains unverified.
 
-# Project Objectives
-- Identify customer behavior patterns
-- Segment customers into meaningful groups
-- Apply clustering algorithms for unsupervised learning
-- Compare clustering performance across multiple cluster sizes
-- Support business intelligence and customer targeting analysis
+## Verification
+Replacement helper executed successfully for all six searches; historical notebook outputs retained without a full notebook rerun. See helper_validation.txt.
 
----
-
-# Tools & Technologies
-- Python
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- scipy
-- Jupyter Notebook
-- Unsupervised Machine Learning
-
----
-
-# Repository Structure
-
-```text
-Mall-Customer-Segmentation/
-│
-├── Data/
-│
-├── Images/
-│   ├── Grid.png
-│   ├── Hierarchical.png
-│   └── K-Means.png
-│
-├── Notebooks/
-│   └── mall_customer_segmentation.ipynb
-│
-├── Reports/
-│
-└── README.md
+## Run
+```bash
+python -m pip install -r requirements.txt
+jupyter lab
 ```
+Open [the notebook](Notebooks/mall_customer_segmentation.ipynb) and run cells in order. Dependencies are unpinned.
 
----
-
-# Exploratory Data Analysis
-
-The project explored relationships between:
-- customer age
-- annual income
-- spending score
-
-The pairplot visualization below highlights customer distribution patterns and variable relationships used for segmentation analysis.
-
-![Customer Pairplot](./Images/Grid.png)
-
----
-
-# Clustering Analysis
-
-The project evaluated clustering behavior using:
-- K-Means clustering
-- hierarchical clustering
-- Calinski-Harabasz scoring
-
-The analysis compared multiple cluster values to determine optimal customer segmentation structures.
-
----
-
-# K-Means Clustering Evaluation
-
-The K-Means clustering evaluation compared cluster counts across multiple values of `k` using the Calinski-Harabasz score.
-
-![K-Means Evaluation](./Images/K-Means.png)
-
----
-
-# Hierarchical Clustering Evaluation
-
-Hierarchical clustering analysis was also performed to compare segmentation quality across varying cluster counts.
-
-![Hierarchical Clustering](./Images/Hierarchical.png)
-
----
-
-# Key Findings
-- Customer groups demonstrated distinct behavioral segmentation patterns.
-- Spending behavior varied significantly across income and age groups.
-- Clustering analysis identified meaningful customer subgroup structures.
-- K-Means and hierarchical clustering produced comparable segmentation trends.
-- Optimal clustering scores suggested strong customer grouping behavior around mid-range cluster counts.
-
----
-
-# Machine Learning Concepts Applied
-- Unsupervised learning
-- Clustering analysis
-- Customer segmentation
-- K-Means clustering
-- Hierarchical clustering
-- Cluster evaluation metrics
-- Feature relationship analysis
-
----
-
-# Supporting Files
-
-This repository includes:
-- Jupyter notebooks
-- clustering visualizations
-- segmentation analysis workflows
-- machine learning evaluation outputs
-
----
-
-# Skills Demonstrated
-- Unsupervised machine learning
-- Customer segmentation
-- Clustering analysis
-- Exploratory data analysis
-- Python programming
-- Feature analysis
-- Data visualization
-- Predictive analytics workflows
-
----
-
-# Data
-
-This project uses mall customer demographic and behavioral data for customer segmentation analysis.
-
-The dataset includes:
-- customer age
-- annual income
-- spending score metrics
-
-The data was used to identify customer groups and evaluate segmentation behavior using clustering algorithms.
-
----
-
-# Author
-
-Cameron Batts
-
-GitHub: https://github.com/Cameron-Batts
-
-Portfolio: https://cameron-batts.github.io
+## Files
+- [Analysis report](Reports/mall_customer_segmentation.html)
+- [Original PDF](Reports/mall_customer_segmentation.pdf): historical export; may predate corrections.
+- [Live portfolio report](https://cameron-batts.github.io/mall_customer_segmentation.html)
