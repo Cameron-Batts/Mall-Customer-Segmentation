@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mall Customer Segmentation and PCA | Cameron Batts</title><style>body{margin:0;background:#f7f8fa;color:#152540;font:16px/1.65 system-ui}main{max-width:950px;margin:auto;padding:32px 24px}h1{font:bold 2.4rem Georgia}h2{border-bottom:2px solid #e8c97a;margin-top:36px}pre{padding:18px;background:white;border-left:3px solid #c9a84c;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}details{margin:16px 0}summary{cursor:pointer}p{overflow-wrap:anywhere}a{color:#1a3560}img{max-width:100%;height:auto}</style><main><a href="https://cameron-batts.github.io/">← Portfolio</a><h1>Mall Customer Segmentation and PCA</h1><p><strong>Cameron Batts</strong></p><h2>Problem</h2><p>Compare cluster-count heuristics and examine how much information PCA retains in three customer attributes.</p><h2>Approach</h2><p>Use 200 customers with age, annual income and spending score. Evaluate k=2–14 using K-Means and Ward agglomerative clustering with Calinski–Harabasz, negated Davies–Bouldin and silhouette scores. Clustering uses original feature scales; PCA uses standardized features.</p><h2>Results</h2><p>The original six saved clustering searches all selected six clusters. Standardized PCA retained 44.27% of variance with one component and 77.57% with two. Agreement between internal metrics supports further exploration; it does not prove actionable customer segments.</p><h2>Limitations</h2><p>The original plotting/tuning helper was absent. A replacement is now bundled with explicit random_state=42 and n_init=10; results may differ from the historical outputs. Original clustering outputs are retained and labeled, and the replacement helper is checked separately. Clustering is sensitive to feature scales, seeds and sample composition. No stability analysis, customer-level segment profiles or campaign validation was performed.</p><h2>Data</h2><p>Data/mall_customers.csv contains 200 records. CustomerID and Gender are excluded from modeling. The original repository did not document a dataset source or license; provenance remains unverified.</p><h2>Verification</h2><p>Replacement helper executed successfully for all six searches; historical notebook outputs retained without a full notebook rerun. See helper_validation.txt.</p><h1>Import libraries</h1><details><summary>Python code</summary><pre>from pathlib import Path
+project_root = Path.cwd().parent if Path.cwd().name in (&#x27;Notebook&#x27;, &#x27;Notebooks&#x27;) else Path.cwd()
+import sys
+sys.path.insert(0, str(project_root))
+import os
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from sklearn.decomposition import PCA
+from sklearn.metrics import davies_bouldin_score, silhouette_score
+from sklearn.preprocessing import StandardScaler
+
+from utils_DA import (
+    plot_dendrogram,
+    tune_agglomerative_clustering,
+    tune_k_means
+)
+</pre></details><h1>Read data and basic preparation</h1><p>Here we read the data.</p><details><summary>Python code</summary><pre>mall_customers = pd.read_csv(project_root / &#x27;Data&#x27; / &#x27;mall_customers.csv&#x27;)
+mall_customers.drop([&#x27;CustomerID&#x27;, &#x27;Gender&#x27;], axis=1, inplace=True)</pre></details><details><summary>Python code</summary><pre>mall_customers.head()</pre></details><pre>   Age  Annual Income (k$)  Spending Score (1-100)
+0   19                  15                      39
+1   21                  15                      81
+2   20                  16                       6
+3   23                  16                      77
+4   31                  17                      40</pre><details><summary>Python code</summary><pre>_ = sns.pairplot(mall_customers)
+plt.tight_layout()</pre></details><pre>&lt;Figure size 750x750 with 12 Axes&gt;</pre><h1>k-means</h1><p>We will use the [Calinski-Harabasz score](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index_) as a heuristic to try and determine the best value for `k`.</p><details><summary>Python code</summary><pre>k_means_tuning = tune_k_means(data=mall_customers, k=range(2, 15), n_init = 10)
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;k&#x27;)
+ax.set_ylabel(&#x27;Calinski-Harabasz score&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal k: {k_means_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal k: 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><details><summary>Python code</summary><pre>k_means_tuning = tune_k_means(
+    data=mall_customers, k=range(2, 15), score_function=davies_bouldin_score)
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;k&#x27;)
+ax.set_ylabel(&#x27;Davies-Bouldin score (negated)&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal k (Davies-Bouldin): {k_means_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal k (Davies-Bouldin): 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><details><summary>Python code</summary><pre>k_means_tuning = tune_k_means(
+    data=mall_customers, k=range(2, 15), score_function=silhouette_score)
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;k&#x27;)
+ax.set_ylabel(&#x27;Silhouette score&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal k (Silhouette): {k_means_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal k (Silhouette): 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><p>All three saved K-Means searches selected six clusters in the historical run. Internal metrics can disagree on other datasets; no disagreement appears in these saved outputs.</p><h1>Hierarchical clustering</h1><details><summary>Python code</summary><pre>agglomerative_clustering_tuning = tune_agglomerative_clustering(data=mall_customers, k=range(2, 15))
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;Number of clusters&#x27;)
+ax.set_ylabel(&#x27;Calinski-Harabasz score&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal number of clusters: {agglomerative_clustering_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal number of clusters: 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><details><summary>Python code</summary><pre>agglomerative_clustering_tuning = tune_agglomerative_clustering(data=mall_customers, k=range(2, 15), score_function=davies_bouldin_score)
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;Number of clusters&#x27;)
+ax.set_ylabel(&#x27;Davies-Bouldin score (negated)&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal number of clusters (Davies-Bouldin): {agglomerative_clustering_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal number of clusters (Davies-Bouldin): 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><details><summary>Python code</summary><pre>agglomerative_clustering_tuning = tune_agglomerative_clustering(data=mall_customers, k=range(2, 15), score_function=silhouette_score)
+
+ax = plt.gca()
+ax.set_xlabel(&#x27;Number of clusters&#x27;)
+ax.set_ylabel(&#x27;Silhouette score&#x27;)
+plt.tight_layout()
+
+print(f&quot;Optimal number of clusters (Silhouette): {agglomerative_clustering_tuning.get(&#x27;best_k&#x27;)}&quot;)</pre></details><pre>Optimal number of clusters (Silhouette): 6
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><p>All three saved hierarchical searches also selected six clusters. This supports further investigation, but does not establish business value or stable customer membership.</p><p>Compare feature scaling, resampled cluster membership and segment profiles before using groups in a campaign. Metric agreement alone does not establish that clusters represent durable customer behavior.</p><details><summary>Python code</summary><pre>scaler = StandardScaler()
+mall_customers_scaled = scaler.fit_transform(mall_customers)
+
+pca_model = PCA(n_components=3)
+pca_model.fit(mall_customers_scaled)</pre></details><pre>PCA(n_components=3)</pre><p>The maximum number of principal components is 3, because the dataset has 3 features after dropping CustomerID and Gender: Age, Annual Income, and Spending Score. PCA can find at most as many principal components as there are features in the data, so 3 is the upper limit here.</p><p>Here, we plot the cumulative fraction of variability explained by an increasing number of principal components.</p><details><summary>Python code</summary><pre>try:
+    cumulative_variance_explained = np.cumsum(pca_model.explained_variance_ratio_)
+
+    _ = plt.plot(range(1, mall_customers.shape[1] + 1), cumulative_variance_explained)
+    ax = plt.gca()
+    _ = ax.set_xlabel(&quot;Number of principal components&quot;)
+    _ = ax.set_ylabel(&quot;Variability captured&quot;)
+    _ = ax.set_xticks([1, 2, 3])
+    plt.tight_layout()
+
+    for index, item in enumerate(cumulative_variance_explained):
+        print(f&quot;Variance explained by {index + 1} components: {round(item * 100, 2)}%&quot;)
+except NameError:
+    print(&#x27;The object `pca_model` does not exist!&#x27;)</pre></details><pre>Variance explained by 1 components: 44.27%
+Variance explained by 2 components: 77.57%
+Variance explained by 3 components: 100.0%
+</pre><pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre><p>Two components retain 77.57% of standardized variance; three retain 100%. Whether the reduction is useful depends on an explicit variance target and downstream task, rather than a universal dimensionality rule.</p><figure><img alt="Historical analysis visualization: Grid" src="https://raw.githubusercontent.com/Cameron-Batts/Mall-Customer-Segmentation/main/Images/Grid.png"><figcaption>Historical visualization: Grid</figcaption></figure><figure><img alt="Historical analysis visualization: Hierarchical" src="https://raw.githubusercontent.com/Cameron-Batts/Mall-Customer-Segmentation/main/Images/Hierarchical.png"><figcaption>Historical visualization: Hierarchical</figcaption></figure><figure><img alt="Historical analysis visualization: K-Means" src="https://raw.githubusercontent.com/Cameron-Batts/Mall-Customer-Segmentation/main/Images/K-Means.png"><figcaption>Historical visualization: K-Means</figcaption></figure></main></html>
