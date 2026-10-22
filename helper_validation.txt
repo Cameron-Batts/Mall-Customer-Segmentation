@@ -1,0 +1,7 @@
+Replacement helper check on bundled data; historical outputs remain unchanged.
+tune_k_means / calinski_harabasz_score: best_k=6
+tune_k_means / davies_bouldin_score: best_k=6
+tune_k_means / silhouette_score: best_k=6
+tune_agglomerative_clustering / calinski_harabasz_score: best_k=6
+tune_agglomerative_clustering / davies_bouldin_score: best_k=6
+tune_agglomerative_clustering / silhouette_score: best_k=6
